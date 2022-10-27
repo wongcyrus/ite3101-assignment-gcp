@@ -1,6 +1,6 @@
-STUDENT_ID = "979785543131"
+STUDENT_ID = "00000000000"
 API_KEY = ""
 
-API_ENDPOINT = 'https://api-pytest-runner-azure-2223.azure-api.net'
+API_ENDPOINT = 'https://api-pytest-runner-test-2223.azure-api.net'
 LOCATIONS = "asia-east2"
 PROJECT_ID = "ite3101-assignment"

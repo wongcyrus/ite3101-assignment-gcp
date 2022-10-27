@@ -1,4 +1,4 @@
-# Python Assignment exercises
+# Python Assignment 2022
 
 ## Windows
 ### Change Powershell execution policy

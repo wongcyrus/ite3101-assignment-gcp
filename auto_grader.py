@@ -50,11 +50,14 @@ try:
         # Azure function is Linux.
         full_path = os.path.realpath(__file__)
         service_account_key_file_path = os.path.dirname(full_path) + sep + "service_account_key.json"
+        config_py_file_path = os.path.dirname(full_path) + sep + "config.py"
         service_account_key = Path(service_account_key_file_path).read_text()
+        config_py = Path(config_py_file_path).read_text()
         data = {
             "sourceCodeFilePath": sourceCodeFilePath.replace(sep,"/"),
             "sourceCode": code,
-            "serviceAccountKey": service_account_key
+            "serviceAccountKey": service_account_key,
+            "config_py": config_py
         }
         print("Calling to Azure function and run test now, please wait.")
         r = requests.post(API_ENDPOINT+"/pytester", json=data,

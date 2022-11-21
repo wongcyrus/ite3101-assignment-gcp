@@ -27,7 +27,7 @@ class TestOutput(unittest.TestCase):
         self.assertEqual(expected_language_code, language_code)
 
     @parameterized.expand([
-        ("雲端系統及數據中心管理高級文憑課程編號 IT114115", "en", 'Higher Diploma in Cloud Systems and Data Centre Management Programme ID IT114115'),
+        ("雲端系統及數據中心管理高級文憑課程編號 IT114115", "en", 'Higher Diploma in Cloud System and Data Center Management Course Code IT114115'),
         ("Higher Diploma in Cloud and Data Centre Administration Programme code IT114115", "ja", "クラウドおよびデータ センター管理の高等ディプロマ プログラム コード IT114115"),
         ("ワンピース", "en", "one piece"),
     ])

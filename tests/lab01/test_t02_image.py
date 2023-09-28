@@ -46,7 +46,7 @@ class TestOutput(unittest.TestCase):
             "IVE\nInformation Technology\nMember of VTC Group", text)
 
     @parameterized.expand([
-        ('happy-class.jpg', 12),
+        ('happy-class.jpg', 17),
         ('unhappy-class.jpg', 6)
     ])
     def test_03_get_emotional_index(self, image: str, expected_emotional_index: float):

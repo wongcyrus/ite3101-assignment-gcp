@@ -1,5 +1,16 @@
 # Python Assignment 2022
 
+Login your Google Cloud Console, open Cloud Shall and run the following commands to enable API.
+```
+gcloud services enable vision.googleapis.com
+gcloud services enable translate.googleapis.com
+gcloud services enable language.googleapis.com
+gcloud services enable cloudfunctions.googleapis.com
+gcloud services enable cloudbuild.googleapis.com
+gcloud services enable run.googleapis.com
+gcloud services enable artifactregistry.googleapis.com
+```
+
 ## Windows
 ### Change Powershell execution policy
 

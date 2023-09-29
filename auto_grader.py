@@ -47,7 +47,7 @@ try:
     else:
         # Azure function is Linux.
         full_path = os.path.realpath(__file__)
-        service_account_key_file_path = os.path.dirname(full_path) + sep + "service_account_key.json"
+        service_account_key_file_path = os.path.dirname(full_path) + SEP + "service_account_key.json"
         service_account_key = Path(service_account_key_file_path).read_text()
         data = {
             "sourceCodeFilePath": source_code_file_path.replace(SEP,"/"),

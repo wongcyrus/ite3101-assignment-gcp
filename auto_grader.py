@@ -1,5 +1,4 @@
 import os
-import shutil
 import sys
 from pathlib import Path
 
@@ -15,8 +14,6 @@ SEP = os.sep
 
 def git_push(message):
     try:
-        shutil.copyfile(os.path.join('lab', 'autograding.json'),
-                        os.path.join('.github', 'classroom', 'autograding.json'))
         repo = Repo(PATH_OF_GIT_REPO)
         repo.git.add(update=True)
         repo.index.commit(message)
@@ -34,7 +31,7 @@ try:
     source_code_file_path = SEP.join(argument_list[0].split(SEP)[-3:])
     print(source_code_file_path)
     code = Path(argument_list[0]).read_text()
-    print(code)
+    # print(code)
 
     source_code_file_path_segments = source_code_file_path.split(SEP)
     test_code_file_path = os.path.join(
@@ -55,9 +52,9 @@ try:
             "serviceAccountKey": service_account_key
         }
         print("Calling to Google Cloud function and run test now, please wait.")
-        r = requests.post(API_ENDPOINT+"/pytest?key="+API_KEY, json=data)
+        r = requests.post(API_ENDPOINT+"/pytest?key="+API_KEY, json=data, timeout=300)
         print(r.status_code)
-        print(r.text)
+        # print(r.text)
         if r.text != "Repeated Successful Test.":
             git_push(source_code_file_path)
 

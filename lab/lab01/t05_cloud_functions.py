@@ -1,32 +1,35 @@
 import os
 import tempfile
 import zipfile
-from os import environ
 
 from google.cloud import functions_v2
-from google.cloud.functions_v2 import (BuildConfig, CreateFunctionRequest,
+from google.cloud.functions_v2 import (BuildConfig,
                                        Environment, Function, ServiceConfig,
                                        Source, StorageSource, GetFunctionRequest)
 
 from lab.lab01.t01_bucket import upload_file_to_bucket
 
-import json
-import requests
-import google.oauth2.id_token
-import google.auth.transport.requests
+from google.oauth2 import service_account
+
+dirname = os.path.dirname(__file__)
+key_file_path = os.path.abspath(os.path.join(
+    dirname, '..', '..', 'service_account_key.json'))
+credentials = service_account.Credentials.from_service_account_file(
+    key_file_path, scopes=['https://www.googleapis.com/auth/cloud-platform'])
 
 
-def get_parent():
-    project_id = environ.get("PROJECT_ID", "")
-    locations = environ.get("LOCATIONS", "")
-    parent = f"projects/{project_id}/locations/{locations}"
+def get_parent() ->str:
+    project_id = credentials.project_id
+    locations = os.environ.get("LOCATIONS", "")
+    parent = os.path.join("projects", project_id, "locations", locations)
     return parent
 
 
-def get_unique_function_name():
-    project_id = environ.get("PROJECT_ID", "")
-    locations = environ.get("LOCATIONS", "")
-    parent = f"projects/{project_id}/locations/{locations}/functions/helloworld"
+def get_function_name(function_id: str) ->str:
+    project_id = credentials.project_id
+    locations = os.environ.get("LOCATIONS", "")
+    parent = os.path.join("projects", project_id, "locations",
+                          locations, "functions", function_id)
     return parent
 
 
@@ -62,17 +65,17 @@ def create_function(bucket_name: str):
     service_config.timeout_seconds = 60
     service_config.ingress_settings = ServiceConfig.IngressSettings.ALLOW_ALL
 
-    fn = Function()
-    fn.build_config = build_config
-    fn.service_config = service_config
-    fn.description = description
-    fn.environment = Environment.GEN_2
+    function = Function()
+    function.build_config = build_config
+    function.service_config = service_config
+    function.description = description
+    function.environment = Environment.GEN_2
 
-    # set function_id to "translateToChineseTrandtional"
+    # Tips
     # https://cloud.google.com/python/docs/reference/cloudfunctions/latest/google.cloud.functions_v2.types.CreateFunctionRequest
 
     create_function_request = CreateFunctionRequest()
-    create_function_request.function = fn
+    create_function_request.function = function
     create_function_request.function_id = "helloworld"
     create_function_request.parent = get_parent()
 
@@ -84,9 +87,9 @@ def create_function(bucket_name: str):
     return operation
 
 
-def check_cloud_function_state():
+def check_cloud_function_state(function_id: str)->str:
     get_function_request = GetFunctionRequest()
-    get_function_request.name = get_unique_function_name()
+    get_function_request.name = get_function_name(function_id)
 
     # TODO: Create a client
     client = functions_v2.FunctionServiceClient()
@@ -94,12 +97,3 @@ def check_cloud_function_state():
     fn = None
     return fn.state.name
 
-# https://stackoverflow.com/questions/61573102/calling-a-google-cloud-function-from-within-python
-def invoke_cloud_function_state(name):
-    get_function_request = GetFunctionRequest()
-    get_function_request.name = get_unique_function_name()
-    client = functions_v2.FunctionServiceClient()
-    fn = client.get_function(request=get_function_request)
-    uri = fn.service_config.uri
-
-    pass

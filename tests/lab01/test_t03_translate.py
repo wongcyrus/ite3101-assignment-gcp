@@ -1,19 +1,11 @@
-
-from config import PROJECT_ID
-from lab.lab01.t03_translate import detect_language, translate_to
-
-from parameterized import parameterized
 import os
-import sys
+from lab.lab01.t03_translate import detect_language, translate_to
+from parameterized import parameterized
 import unittest
-sys.path.append("...")
 
 dirname = os.path.dirname(__file__)
-key_file_path = os.path.join(dirname, '..', '..', 'service_account_key.json')
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = key_file_path
-os.environ["PROJECT_ID"] = PROJECT_ID
-
-
+key_file_path = os.path.abspath(os.path.join(
+    dirname, '..', '..', 'service_account_key.json'))
 
 class TestOutput(unittest.TestCase):
 
@@ -27,10 +19,12 @@ class TestOutput(unittest.TestCase):
         self.assertEqual(expected_language_code, language_code)
 
     @parameterized.expand([
-        ("雲端系統及數據中心管理高級文憑課程編號 IT114115", "en", 'Higher Diploma in Cloud Systems and Data Center Management Course Number IT114115'),
-        ("Higher Diploma in Cloud and Data Centre Administration Programme code IT114115", "ja", "クラウドおよびデータセンター管理の高等ディプロマ プログラムコード IT114115"),
+        ("雲端系統及數據中心管理高級文憑課程編號 IT114115", "en",
+         'Higher Diploma in Cloud Systems and Data Center Management Course Number IT114115'),
+        ("Higher Diploma in Cloud and Data Centre Administration Programme code IT114115",
+         "ja", "クラウドおよびデータセンター管理の高等ディプロマ プログラムコード IT114115"),
         ("ワンピース", "en", "one piece"),
     ])
     def test_02_translate_to(self, text: str, target_language_code: str, expected_translated_result: str):
         translated = translate_to(text, target_language_code)
-        self.assertEqual(expected_translated_result, translated)
+        self.assertMultiLineEqual(expected_translated_result, translated)

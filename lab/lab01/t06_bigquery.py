@@ -4,9 +4,6 @@ from google.cloud import bigquery
 from google.cloud.exceptions import NotFound
 from google.oauth2 import service_account
 
-from config import PROJECT_ID
-
-
 dirname = os.path.dirname(__file__)
 key_file_path = os.path.abspath(os.path.join(
     dirname, '..', '..', 'service_account_key.json'))

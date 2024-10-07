@@ -37,14 +37,16 @@ def get_function_name(function_id: str) ->str:
 # https://cloud.google.com/python/docs/reference/cloudfunctions/latest/google.cloud.functions_v2.services.function_service.FunctionServiceClient
 
 
-def create_function(bucket_name: str):
+def create_function(bucket_name: str, function_id: str):
 
     # https://gist.github.com/simonthompson99/362404d6142db3ed14908244f5750d08
-    dirname = os.path.dirname(__file__)
-    source = os.path.join(dirname, "hello_world.py")
-    tmpdir = tempfile.mkdtemp()
-    zip_fn = os.path.join(tmpdir, 'archive.zip')
-    # TODO: Add file to zip
+    source = os.path.abspath(os.path.join(dirname, "hello_world.py"))
+    with tempfile.TemporaryDirectory() as tmpdir:
+        zip_fn = os.path.join(tmpdir, 'archive.zip')
+        # TODO: Add "hello_world.py" file to zip but file name is "main.py"
+
+        upload_file_to_bucket(bucket_name, "hello_world.zip", zip_fn)
+    
 
     upload_file_to_bucket(bucket_name, "hello_world.zip", zip_fn)
     description = "Hello World"
@@ -57,7 +59,7 @@ def create_function(bucket_name: str):
     source.storage_source = storage_source
 
     build_config = BuildConfig()
-    # TODO: set runtime and entry point
+    # TODO: set runtime to python312 and entry point
     build_config.source = source
 
     service_config = ServiceConfig()
@@ -66,6 +68,7 @@ def create_function(bucket_name: str):
     service_config.ingress_settings = ServiceConfig.IngressSettings.ALLOW_ALL
 
     function = Function()
+    function.name = get_parent() + "/functions/"+function_id
     function.build_config = build_config
     function.service_config = service_config
     function.description = description
@@ -73,11 +76,6 @@ def create_function(bucket_name: str):
 
     # Tips
     # https://cloud.google.com/python/docs/reference/cloudfunctions/latest/google.cloud.functions_v2.types.CreateFunctionRequest
-
-    create_function_request = CreateFunctionRequest()
-    create_function_request.function = function
-    create_function_request.function_id = "helloworld"
-    create_function_request.parent = get_parent()
 
     # TODO: Create a client
     

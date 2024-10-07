@@ -11,8 +11,7 @@ credentials = service_account.Credentials.from_service_account_file(
 
 
 # Reference https://codelabs.developers.google.com/codelabs/cloud-vision-api-python#0
-
-
+# Hints: You need to use ImageAnnotatorClient
 def prepare_image(bucket_name: str, image_file_path: str) -> vision.Image:
     pass
 
